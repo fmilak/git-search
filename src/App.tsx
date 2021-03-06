@@ -16,6 +16,9 @@ configure({ enforceActions: "always" });
 const rootStore = new RootStore();
 export const RootContext = createContext(rootStore);
 
+/**
+ * Main app function
+ */
 const App: React.FC = () => {
   return <MainPage />;
 };

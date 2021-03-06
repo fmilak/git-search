@@ -4,10 +4,13 @@ import { observer } from "mobx-react";
 import React from "react";
 import { ReactElement, useContext, useEffect } from "react";
 import { RootContext } from "../App";
+import GitRepoResponse from "../model/GitRepoResponse";
 
-const MainTable = observer(({ data, columns }: { data: any; columns: any }) => {
-  return <Table dataSource={data} columns={columns} />;
-});
+const MainTable = observer(
+  ({ data, columns }: { data: Array<GitRepoResponse>; columns: any }) => {
+    return <Table dataSource={data} columns={columns} />;
+  }
+);
 
 const MainPage: React.FC = observer(
   (): ReactElement => {

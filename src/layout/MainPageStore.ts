@@ -1,16 +1,18 @@
 import { action, observable, runInAction } from "mobx";
+import GitRepoResponse from "../model/GitRepoResponse";
 import RestOptions from "../model/RestOptions";
 import RestStore from "../service/RestStore";
 
 class MainPageStore {
   restStore!: RestStore;
 
-  repositories: Array<any> = new Array<any>();
+  repositories: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
-  @observable shownData: Array<any> = new Array<any>();
+  @observable shownData: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
   @observable isLoading = false;
 
+  // Shown table columns
   columns = [
     {
       title: "ID",
@@ -23,12 +25,26 @@ class MainPageStore {
       key: "name",
     },
     {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Language",
+      dataIndex: "language",
+      key: "language",
+    },
+    {
       title: "Owner",
       dataIndex: ["owner", "login"],
       key: ["owner", "login"],
     },
   ];
 
+  /**
+   * Main function when entering page
+   * Fetches first 100 GIT repositories
+   */
   @action
   init = (): void => {
     this.isLoading = true;
@@ -38,7 +54,11 @@ class MainPageStore {
     this.restStore.fetch(url, restOptions, this.handleInitResponse);
   };
 
-  private handleInitResponse = (apiResponse: any): void => {
+  /**
+   * Handles REST response after repo fetching
+   * @param apiResponse -> response from server
+   */
+  private handleInitResponse = (apiResponse: Array<GitRepoResponse>): void => {
     runInAction(() => {
       this.repositories = [...apiResponse];
       this.shownData = [...apiResponse];
@@ -46,6 +66,10 @@ class MainPageStore {
     });
   };
 
+  /**
+   * Fetches GIT repositories by user
+   * @param value -> user by which to filter
+   */
   @action
   filterUsers = (value: string): void => {
     if (value === "") {
@@ -59,7 +83,11 @@ class MainPageStore {
     this.restStore.fetch(url, restOptions, this.handleUserRepos);
   };
 
-  private handleUserRepos = (apiResponse: any): void => {
+  /**
+   * Handles REST response after repo by user fetching
+   * @param apiResponse -> response from server
+   */
+  private handleUserRepos = (apiResponse: Array<GitRepoResponse>): void => {
     runInAction(() => {
       this.repositories = [...apiResponse];
       this.shownData = [...apiResponse];
@@ -67,6 +95,10 @@ class MainPageStore {
     });
   };
 
+  /**
+   * Function for filtering table data by repo name
+   * @param value -> input by which to filter
+   */
   @action
   filterTable = (value: string): void => {
     this.shownData = this.repositories.filter((repo: any) => {

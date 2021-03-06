@@ -1,9 +1,18 @@
 import { isNil } from "lodash";
 import RestOptions from "../model/RestOptions";
 
+/**
+ * Main service for REST requests
+ */
 class RestStore {
   private MAIN_URL = "https://api.github.com";
 
+  /**
+   * Main fetch method
+   * @param path -> url exstension
+   * @param restOptions -> additional REST options for request
+   * @param callback -> function that we will use as a callback
+   */
   fetch = async (
     path: string,
     restOptions: RestOptions,
@@ -50,7 +59,7 @@ class RestStore {
    * @param responseJson -> response from API
    * @param callback -> callback function
    * @param path -> url path
-   * @param restOptions -> {@link RestOptions} options for rest call
+   * @param restOptions -> options for rest call
    */
   private handleApiResponseJson = (
     responseJson: string,
