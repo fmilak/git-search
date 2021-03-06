@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Input, Table } from "antd";
 import Search from "antd/lib/input/Search";
 import { observer } from "mobx-react";
 import React from "react";
@@ -19,16 +19,27 @@ const MainPage: React.FC = observer(
     }, [mainPageStore]);
 
     return (
-      <div>
-        <Search
-          placeholder="Search text"
-          onSearch={(value) => mainPageStore.filterTable(value)}
-          style={{ width: 200 }}
-          allowClear
-          size="large"
-          enterButton
-          loading={mainPageStore.isLoading}
-        />
+      <div style={{ margin: 20 }}>
+        <div style={{ margin: 10 }}>
+          <Search
+            placeholder="Enter user"
+            onSearch={(value) => mainPageStore.filterUsers(value)}
+            style={{ width: 400 }}
+            allowClear
+            size="large"
+            enterButton
+            loading={mainPageStore.isLoading}
+          />
+          <Input
+            placeholder="Enter repository name"
+            onKeyUp={(event) =>
+              mainPageStore.filterTable(event.currentTarget.value)
+            }
+            style={{ width: 400 }}
+            allowClear
+            size="large"
+          />
+        </div>
         <MainTable
           columns={mainPageStore.columns}
           data={mainPageStore.shownData.slice()}

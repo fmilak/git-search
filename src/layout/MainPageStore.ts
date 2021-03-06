@@ -47,20 +47,32 @@ class MainPageStore {
   };
 
   @action
-  filterTable = (value: string): void => {
+  filterUsers = (value: string): void => {
+    if (value === "") {
+      this.init();
+      return;
+    }
     this.isLoading = true;
-    const url = `/search/repositories`;
+    const url = `/users/${value}/repos`;
     const restOptions: RestOptions = new RestOptions();
     restOptions.method = "get";
-    restOptions.params.set("q", value);
-    this.restStore.fetch(url, restOptions, this.handleFilter);
+    this.restStore.fetch(url, restOptions, this.handleUserRepos);
   };
 
-  private handleFilter = (apiResponse: any): void => {
+  private handleUserRepos = (apiResponse: any): void => {
     runInAction(() => {
-      this.repositories = [...apiResponse.items];
-      this.shownData = [...apiResponse.items];
+      this.repositories = [...apiResponse];
+      this.shownData = [...apiResponse];
       this.isLoading = false;
+    });
+  };
+
+  @action
+  filterTable = (value: string): void => {
+    this.shownData = this.repositories.filter((repo: any) => {
+      if (repo.name.includes(value)) {
+        return repo;
+      }
     });
   };
 }
