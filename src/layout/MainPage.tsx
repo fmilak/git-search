@@ -5,6 +5,31 @@ import React from "react";
 import { ReactElement, useContext, useEffect } from "react";
 import { RootContext } from "../App";
 import GitRepoResponse from "../model/GitRepoResponse";
+import MainPageStore from "./MainPageStore";
+
+const SearchBar = observer(
+  ({ store }: { store: MainPageStore }): ReactElement => {
+    return (
+      <div style={{ margin: 10 }}>
+        <Search
+          placeholder="Enter user"
+          onSearch={(value) => store.filterUsers(value)}
+          style={{ width: 400 }}
+          allowClear
+          size="large"
+          enterButton
+          loading={store.isLoading}
+        />
+        <Input
+          placeholder="Enter repository name"
+          onKeyUp={(event) => store.filterTable(event.currentTarget.value)}
+          style={{ width: 400 }}
+          size="large"
+        />
+      </div>
+    );
+  }
+);
 
 const MainTable = observer(
   ({ data, columns }: { data: Array<GitRepoResponse>; columns: any }) => {
@@ -23,26 +48,7 @@ const MainPage: React.FC = observer(
 
     return (
       <div style={{ margin: 20 }}>
-        <div style={{ margin: 10 }}>
-          <Search
-            placeholder="Enter user"
-            onSearch={(value) => mainPageStore.filterUsers(value)}
-            style={{ width: 400 }}
-            allowClear
-            size="large"
-            enterButton
-            loading={mainPageStore.isLoading}
-          />
-          <Input
-            placeholder="Enter repository name"
-            onKeyUp={(event) =>
-              mainPageStore.filterTable(event.currentTarget.value)
-            }
-            style={{ width: 400 }}
-            allowClear
-            size="large"
-          />
-        </div>
+        <SearchBar store={mainPageStore} />
         <MainTable
           columns={mainPageStore.columns}
           data={mainPageStore.shownData.slice()}
