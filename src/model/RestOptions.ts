@@ -14,9 +14,7 @@ class RestOptions {
 
   accept = "application/vnd.github.v3+json";
 
-  authorization = `Basic ${Base64.encode(
-    `fmilak:ff2a3095f308a389d0d952f0ef398ee8bea78cd0`
-  )}`;
+  authorization = `Basic ${Base64.encode(`fmilak:`)}`;
 }
 
 export default RestOptions;
