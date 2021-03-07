@@ -11,8 +11,6 @@ class MainPageStore {
 
   @observable shownData: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
-  @observable isLoading = false;
-
   // Shown table columns
   columns = [
     {
