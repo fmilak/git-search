@@ -9,6 +9,10 @@ import GitRepoResponse from "../model/GitRepoResponse";
 import { GET_REPOS_BY_USERNAME } from "../service/GqlService";
 import MainPageStore from "./MainPageStore";
 
+/**
+ * Search bars for table
+ * Can search through repositories by usename and repo name
+ */
 const SearchBar = observer(
   ({
     store,
@@ -39,12 +43,18 @@ const SearchBar = observer(
   }
 );
 
+/**
+ * Table for repository data
+ */
 const MainTable = observer(
   ({ data, columns }: { data: Array<GitRepoResponse>; columns: any }) => {
     return <Table dataSource={data} columns={columns} />;
   }
 );
 
+/**
+ * Main page
+ */
 const MainPage: React.FC = observer(
   (): ReactElement => {
     const { mainPageStore, restStore } = useContext(RootContext);
