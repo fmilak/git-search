@@ -1,14 +1,15 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable } from "mobx";
+import GitRepoResponse from "../model/GitRepoResponse";
 import RestStore from "../service/RestStore";
 
 class MainPageStore {
   restStore!: RestStore;
 
-  repositories: Array<any> = new Array<any>();
+  repositories: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
   getRepos!: Function;
 
-  @observable shownData: Array<any> = new Array<any>();
+  @observable shownData: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
   @observable isLoading = false;
 
@@ -16,23 +17,23 @@ class MainPageStore {
   columns = [
     {
       title: "Name",
-      dataIndex: ["node", "name"],
-      key: ["node", "name"],
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Description",
-      dataIndex: ["node", "description"],
-      key: ["node", "description"],
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: "Language",
-      dataIndex: ["node", "languages", "nodes", "name"],
-      key: "language",
+      title: "Languages",
+      dataIndex: "languages",
+      key: "languages",
     },
     {
       title: "Owner",
-      dataIndex: ["node", "owner", "login"],
-      key: ["node", "owner", "login"],
+      dataIndex: ["owner", "login"],
+      key: ["owner", "login"],
     },
   ];
 
@@ -65,8 +66,19 @@ class MainPageStore {
    */
   @action
   setRepositories = (repositories: any): void => {
-    this.repositories = repositories;
-    this.shownData = repositories;
+    this.repositories = repositories.map((repos: any) => {
+      return { ...repos.node };
+    });
+    this.repositories.forEach((repo: any) => {
+      if (repo.languages) {
+        repo.languages = repo.languages.nodes
+          .map((node: any) => {
+            return node.name;
+          })
+          .join(", ");
+      }
+    });
+    this.shownData = [...this.repositories];
   };
 
   /**
@@ -75,8 +87,8 @@ class MainPageStore {
    */
   @action
   filterTable = (value: string): void => {
-    this.shownData = this.repositories.filter((repo: any) => {
-      if (repo.node.name.includes(value)) {
+    this.shownData = this.repositories.filter((repo: GitRepoResponse) => {
+      if (repo.name.includes(value)) {
         return repo;
       }
     });

@@ -8,7 +8,7 @@ class GitRepoResponse {
 
   description = "";
 
-  language = "";
+  languages = "";
 
   owner: any;
 }

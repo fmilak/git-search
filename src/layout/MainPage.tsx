@@ -1,10 +1,12 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { Input, Table } from "antd";
 import Search from "antd/lib/input/Search";
 import { observer } from "mobx-react";
 import React from "react";
 import { ReactElement, useContext, useEffect } from "react";
 import { RootContext } from "../App";
+import GitRepoResponse from "../model/GitRepoResponse";
+import { GET_REPOS_BY_USERNAME } from "../service/GqlService";
 import MainPageStore from "./MainPageStore";
 
 const SearchBar = observer(
@@ -37,39 +39,17 @@ const SearchBar = observer(
   }
 );
 
-const MainTable = observer(({ data, columns }: { data: any; columns: any }) => {
-  return <Table dataSource={data} columns={columns} />;
-});
-
-const GET_REPOS = gql`
-  query GetRepos($username: String!) {
-    user(login: $username) {
-      repositories(first: 100) {
-        edges {
-          node {
-            id
-            description
-            name
-            owner {
-              login
-            }
-            languages(first: 10) {
-              nodes {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
+const MainTable = observer(
+  ({ data, columns }: { data: Array<GitRepoResponse>; columns: any }) => {
+    return <Table dataSource={data} columns={columns} />;
   }
-`;
+);
 
 const MainPage: React.FC = observer(
   (): ReactElement => {
     const { mainPageStore, restStore } = useContext(RootContext);
     const [getRepos, { loading, error, data: repoData }] = useLazyQuery(
-      GET_REPOS
+      GET_REPOS_BY_USERNAME
     );
     mainPageStore.restStore = restStore;
     mainPageStore.getRepos = getRepos;
