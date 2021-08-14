@@ -4,6 +4,8 @@ import { Base64 } from "js-base64";
  * Additional options for REST requests
  */
 class RestOptions {
+  url = "";
+
   method = "";
 
   headers: any;

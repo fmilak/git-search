@@ -6,6 +6,7 @@ import RootStore from "./RootStore";
 import "antd/dist/antd.css";
 import { ApolloProvider } from "@apollo/client";
 import { gqlClient } from "./service/GqlService";
+import AppRouter from "./AppRouter";
 
 /**
  * Enforces MobX action use
@@ -24,7 +25,7 @@ export const RootContext = createContext(rootStore);
 const App: React.FC = () => {
   return (
     <ApolloProvider client={gqlClient}>
-      <MainPage />
+      <AppRouter />
     </ApolloProvider>
   );
 };
