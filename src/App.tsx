@@ -4,6 +4,8 @@ import "./App.css";
 import MainPage from "./layout/MainPage";
 import RootStore from "./RootStore";
 import "antd/dist/antd.css";
+import { ApolloProvider } from "@apollo/client";
+import { gqlClient } from "./service/GqlService";
 
 /**
  * Enforces MobX action use
@@ -20,7 +22,11 @@ export const RootContext = createContext(rootStore);
  * Main app function
  */
 const App: React.FC = () => {
-  return <MainPage />;
+  return (
+    <ApolloProvider client={gqlClient}>
+      <MainPage />
+    </ApolloProvider>
+  );
 };
 
 export default App;

@@ -1,6 +1,5 @@
-import { action, observable, runInAction } from "mobx";
+import { action, observable } from "mobx";
 import GitRepoResponse from "../model/GitRepoResponse";
-import RestOptions from "../model/RestOptions";
 import RestStore from "../service/RestStore";
 
 class MainPageStore {
@@ -8,17 +7,12 @@ class MainPageStore {
 
   repositories: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
-  @observable shownData: Array<GitRepoResponse> = new Array<GitRepoResponse>();
+  getRepos!: Function;
 
-  @observable isLoading = false;
+  @observable shownData: Array<GitRepoResponse> = new Array<GitRepoResponse>();
 
   // Shown table columns
   columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
     {
       title: "Name",
       dataIndex: "name",
@@ -30,9 +24,9 @@ class MainPageStore {
       key: "description",
     },
     {
-      title: "Language",
-      dataIndex: "language",
-      key: "language",
+      title: "Languages",
+      dataIndex: "languages",
+      key: "languages",
     },
     {
       title: "Owner",
@@ -42,27 +36,12 @@ class MainPageStore {
   ];
 
   /**
-   * Main function when entering page
-   * Fetches first 100 GIT repositories
+   * Fetches repositories by username
+   * @param username -> username by which to get repositories
    */
-  @action
-  init = (): void => {
-    this.isLoading = true;
-    const url = `/repositories`;
-    const restOptions: RestOptions = new RestOptions();
-    restOptions.method = "get";
-    this.restStore.fetch(url, restOptions, this.handleInitResponse);
-  };
-
-  /**
-   * Handles REST response after repo fetching
-   * @param apiResponse -> response from server
-   */
-  private handleInitResponse = (apiResponse: Array<GitRepoResponse>): void => {
-    runInAction(() => {
-      this.repositories = [...apiResponse];
-      this.shownData = [...apiResponse];
-      this.isLoading = false;
+  getReposByUsername = async (username: string): Promise<void> => {
+    this.getRepos({
+      variables: { username: username },
     });
   };
 
@@ -73,26 +52,31 @@ class MainPageStore {
   @action
   filterUsers = (value: string): void => {
     if (value === "") {
-      this.init();
+      alert("Please enter valid username!");
       return;
     }
-    this.isLoading = true;
-    const url = `/users/${value}/repos`;
-    const restOptions: RestOptions = new RestOptions();
-    restOptions.method = "get";
-    this.restStore.fetch(url, restOptions, this.handleUserRepos);
+    this.getReposByUsername(value);
   };
 
   /**
-   * Handles REST response after repo by user fetching
-   * @param apiResponse -> response from server
+   * Sets repositories for future use
+   * @param repositories -> array of repositories
    */
-  private handleUserRepos = (apiResponse: Array<GitRepoResponse>): void => {
-    runInAction(() => {
-      this.repositories = [...apiResponse];
-      this.shownData = [...apiResponse];
-      this.isLoading = false;
+  @action
+  setRepositories = (repositories: any): void => {
+    this.repositories = repositories.map((repos: any) => {
+      return { ...repos.node };
     });
+    this.repositories.forEach((repo: any) => {
+      if (repo.languages) {
+        repo.languages = repo.languages.nodes
+          .map((node: any) => {
+            return node.name;
+          })
+          .join(", ");
+      }
+    });
+    this.shownData = [...this.repositories];
   };
 
   /**
@@ -101,7 +85,7 @@ class MainPageStore {
    */
   @action
   filterTable = (value: string): void => {
-    this.shownData = this.repositories.filter((repo: any) => {
+    this.shownData = this.repositories.filter((repo: GitRepoResponse) => {
       if (repo.name.includes(value)) {
         return repo;
       }
