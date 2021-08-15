@@ -5,7 +5,7 @@ import RestOptions from "../model/RestOptions";
  * Main service for REST requests
  */
 class RestStore {
-  private MAIN_URL = "https://api.github.com";
+  private MAIN_URL = "http://localhost:8080/api";
 
   /**
    * Main fetch method

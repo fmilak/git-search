@@ -11,7 +11,7 @@ import {
 const httpLink = createHttpLink({
   uri: "https://api.github.com/graphql",
   headers: {
-    authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
+    authorization: `Bearer ${process.env.REACT_APP_TOKEN}`, // todo -> insert token from backend
   },
 });
 

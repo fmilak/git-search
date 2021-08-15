@@ -7,6 +7,8 @@ import LoginView from "./login/LoginView";
 
 const customHistory = createBrowserHistory();
 
+//todo -> maybe implement login switch
+
 const AppRouter = () => {
   return (
     <Router history={customHistory}>
