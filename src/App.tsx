@@ -37,7 +37,7 @@ const App: React.FC = () => {
     const httpLink = createHttpLink({
       uri: "https://api.github.com/graphql",
       headers: {
-        authorization: `Bearer ${loginStore.githubToken}`,
+        authorization: `Bearer ${githubToken}`,
       },
     });
     const tempGqlClient = new ApolloClient({
