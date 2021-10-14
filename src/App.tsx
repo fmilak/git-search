@@ -30,6 +30,8 @@ export const RootContext = createContext(rootStore);
  */
 const App: React.FC = () => {
   const [newGqlClient, setNewGqlClient] = React.useState<any>(null);
+  const [githubToken, setGithubToken] = React.useState<string>("");
+  loginStore.setGithubToken = setGithubToken;
 
   useEffect(() => {
     const httpLink = createHttpLink({
@@ -43,9 +45,9 @@ const App: React.FC = () => {
       cache: new InMemoryCache(),
     });
     setNewGqlClient(tempGqlClient);
-  }, [loginStore.githubToken]);
+  }, [githubToken]);
 
-  if (!newGqlClient) {
+  if (!newGqlClient || githubToken === "") {
     return (
       <ApolloProvider client={gqlClient}>
         <AppRouter />

@@ -15,6 +15,8 @@ class LoginStore {
 
   @observable isLoggedIn = false;
 
+  setGithubToken: any;
+
   @action
   onUsernameChange = (e: any): void => {
     this.username = e.target.value;
@@ -44,7 +46,7 @@ class LoginStore {
   @action
   handleLoginResponse = (responseJson: any): void => {
     this.isLoggedIn = true;
-    this.githubToken = responseJson.token;
+    this.setGithubToken(responseJson.token);
   };
 }
 
