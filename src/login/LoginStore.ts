@@ -13,6 +13,8 @@ class LoginStore {
 
   @observable password = "";
 
+  @observable isLoggedIn = false;
+
   @action
   onUsernameChange = (e: any): void => {
     this.username = e.target.value;
@@ -41,8 +43,7 @@ class LoginStore {
 
   @action
   handleLoginResponse = (responseJson: any): void => {
-    //todo: handle login response
-    // this.history.push("/");
+    this.isLoggedIn = true;
     this.githubToken = responseJson.token;
   };
 }

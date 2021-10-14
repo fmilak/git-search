@@ -25,7 +25,20 @@ const LoginView = observer(() => {
               marginBottom: 25,
             }}
           >
-            <label style={{ fontSize: 40 }}>Login</label>
+            <label style={{ fontSize: 50 }}>GitHub Search</label>
+          </Col>
+        </Row>
+        <Row>
+          <Col
+            span={24}
+            style={{
+              alignContent: "center",
+              justifyContent: "center",
+              display: "flex",
+              marginBottom: 25,
+            }}
+          >
+            <label style={{ fontSize: 28 }}>Login</label>
           </Col>
         </Row>
         <Row>

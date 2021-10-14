@@ -8,10 +8,10 @@ import {
 /**
  * Creates HTTP link for GraphQL Apollo client
  */
-const httpLink = createHttpLink({
+export let httpLink = createHttpLink({
   uri: "https://api.github.com/graphql",
   headers: {
-    authorization: `Bearer ${process.env.REACT_APP_TOKEN}`, // todo -> insert token from backend
+    authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
   },
 });
 
