@@ -1,9 +1,8 @@
 import { useLazyQuery } from "@apollo/client";
-import { Input, Table } from "antd";
+import { Input, Table, Button } from "antd";
 import Search from "antd/lib/input/Search";
 import { observer } from "mobx-react";
-import React from "react";
-import { ReactElement, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, ReactElement, useState } from "react";
 import { RootContext } from "../App";
 import GitRepoResponse from "../model/GitRepoResponse";
 import { GET_REPOS_BY_USERNAME } from "../service/GqlService";
@@ -64,6 +63,8 @@ const MainPage: React.FC = observer(
     mainPageStore.restStore = restStore;
     mainPageStore.getRepos = getRepos;
 
+    const [counter, setCounter] = useState<number>(0);
+
     useEffect(() => {
       if (repoData) {
         mainPageStore.setRepositories(repoData.user.repositories.edges);
@@ -76,8 +77,15 @@ const MainPage: React.FC = observer(
       }
     }, [error]);
 
+    const handleClick = useCallback(() => {
+      console.log(counter);
+      setCounter(prevCounter => prevCounter + 1);
+    }, [counter]);
+
     return (
       <div style={{ margin: 20 }}>
+        <Button onClick={handleClick}>Test</Button>
+        <span style={{ marginLeft: 8 }}>{counter}</span>
         <SearchBar store={mainPageStore} loading={loading} />
         <MainTable
           columns={mainPageStore.columns}
